@@ -9,7 +9,7 @@ public abstract class Conta implements IConta {
     // ↓ Com protected consigo puxar nas heranças com super.
     protected int agencia;
     protected int numero;
-    protected int saldo;
+    protected double saldo;
 
     //construtores
 
@@ -22,10 +22,10 @@ public abstract class Conta implements IConta {
 
     @Override
     public void sacar(double valor) {
-        if (this.saldo < valor) {
+        if (this.saldo >= valor) {
             this.saldo -= valor;
         } else {
-            System.out.println("Saldo insuficiente");
+            System.out.println("Saldo insuficiente para saque.");
         }
     }
 
@@ -36,8 +36,13 @@ public abstract class Conta implements IConta {
 
     @Override
     public void transferir(double valor, Conta contaDestino) {
-        this.sacar(valor);
-        contaDestino.depositar(valor);
+        if (this.saldo >= valor) {
+            this.sacar(valor);
+            contaDestino.depositar(valor);
+            System.out.println("Transferência realizada com sucesso.");
+        } else {
+            System.out.println("Saldo insuficiente para transferência.");
+        }
     }
 
     //metodos
@@ -49,14 +54,14 @@ public abstract class Conta implements IConta {
         return numero;
     }
 
-    public int getSaldo() {
+    public double getSaldo() {
         return saldo;
     }
 
     protected void imprimirInfosComuns() {
-        System.out.println("Agencia: " + this.agencia);
-        System.out.println("Conta: " + this.numero);
-        System.out.println("Saldo: " + this.saldo);
+        System.out.println(String.format("Agencia: " + this.agencia));
+        System.out.println(String.format("Conta: " + this.numero));
+        System.out.println(String.format("Saldo: %.2f", this.saldo));
 
 
     }
